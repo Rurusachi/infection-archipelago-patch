@@ -1,4 +1,4 @@
-PATCH_BIN = build/infection.bin
+PATCH_BIN = build/infection.patch
 EE_BIN = infection.elf
 EE_OBJS = infection.o
 EE_LINKFILE := linkfile

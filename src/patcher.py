@@ -16,7 +16,7 @@ def extract_patch(patch_file: Path):
         patch_data = f.read(end-start)
     print(f"Patch size: {len(patch_data)} bytes")
 
-    with open( patch_file.parent / "build" / patch_file.with_suffix(".bin").name, "wb") as f:
+    with open( patch_file.parent / "build" / patch_file.with_suffix(".patch").name, "wb") as f:
         f.write(patch_data)
     return
 
