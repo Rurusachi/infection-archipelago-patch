@@ -1,0 +1,35 @@
+ccSys = 0x003788e0;
+cmndTarget = 0x00378c64;
+cmndTargetPrev = 0x00378c68;
+ccCheckTarget = 0x00519920;
+DispButton = 0x001b9ca0;
+MakePacket = 0x0015ae80;
+ccGetEnemyParam = 0x00570cf0;
+ccGetBossParam = 0x00571260;
+
+font = 0x00378954;
+ccSpriteColorTable = 0x002fb430;
+ccFont_SetType = 0x0015cc20;
+ccFont_MakeNum = 0x0015cd40;
+ccSprite_MakePacketStr = 0x0015aed0;
+
+skillTbl = 0x0061f4a0;
+
+archipelagoData = 0x006FA5B0;
+
+
+PHDRS {
+  text PT_LOAD;
+}
+
+SECTIONS {
+	.text 0x006f9e50: {
+		*(.text.entry)
+		*(.text)
+		QUAD(0)
+		*(.data.*)
+		*(.rodata.*)
+	} :text
+
+	
+}
