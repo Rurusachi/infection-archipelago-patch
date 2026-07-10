@@ -3,6 +3,22 @@
 const float pos_x = 20.0; // 20.0
 const float pos_y = 20.0; // 20.0 + 20 * i
 
+const char received_message[] = "Received ";
+
+// BGR format in range 0-128
+const uint custom_colors[] = {
+    0x000077, // red
+    0x408000, // green
+    0x697d7d, // yellow
+    0x764a32, // blue
+    0x770077, // magenta
+    0x777700, // cyan
+    0x744636, // slateblue
+    0x784c58, // plum
+    0x39407d, // salmon
+    0x003c80, // orange
+};
+
 // Helper functions
 inline void ccSprite_SetPos(ccSprite *this, int x, int y) {
     this->pos_x = x;
@@ -18,7 +34,7 @@ inline void ccSprite_SetColor(ccSprite *this, ulong color) {
     this->color1 = (this->color1 & 0xffffffff00000000) | ((color & 0xff0000) >> 0x10);
 }
 
-inline void ccSprite_SetColorFromPreset(ccSprite *this, int colorIndex) {
+inline void ccSprite_SetColorFromPreset(ccSprite *this, enum PresetColor colorIndex) {
     ccSprite_SetColor(this, ccSpriteColorTable[colorIndex]);
 }
 
@@ -70,16 +86,29 @@ int entry(ccMenuCtrl* menuCtrl) {
         float y = pos_y * (archipelagoData.messages[i].queue_pos + 1) - 5.0f;
         
         // Draw drop shadow first
-        ccSprite_SetColor(&font->sprite, 0x80000000);
+        ccSprite_SetColorFromPreset(&font->sprite, PRESET_BLACK);
         ccFont_SetType(font, 0);
         font->sprite.pos_x = x - 2.0f;
         font->sprite.pos_y = y + 2.0f;
+        
+        if (archipelagoData.messages[i].type == 1) {
+            ccSprite_MakePacketStr(&font->sprite, received_message, 0);
+        }
         ccSprite_MakePacketStr(&font->sprite, archipelagoData.messages[i].text, 0);
 
-        ccSprite_SetColorFromPreset(&font->sprite, 22); // TODO: Pick better color. (Possibly attempt drop shadow and set color from client instead)
         ccFont_SetType(font, 0);
         font->sprite.pos_x = x;
         font->sprite.pos_y = y;
+        if (archipelagoData.messages[i].type == 1) {
+            ccSprite_SetColorFromPreset(&font->sprite, PRESET_WHITE);
+            ccSprite_MakePacketStr(&font->sprite, received_message, 0);
+        }
+
+        if (archipelagoData.messages[i].color < 24) {
+            ccSprite_SetColorFromPreset(&font->sprite, archipelagoData.messages[i].color);
+        } else {
+            ccSprite_SetColor(&font->sprite, custom_colors[archipelagoData.messages[i].color-24]);
+        }
         ccSprite_MakePacketStr(&font->sprite, archipelagoData.messages[i].text, 0);
     }
     font->sprite.color0 = tempFontColor0;
