@@ -6,7 +6,7 @@ def extract_patch(patch_file: Path):
     with open(patch_file, "rb") as f:
         elffile = ELFFile(f)
         text = elffile.get_section_by_name(".text")
-        rodata = elffile.get_section_by_name(".rodata")
+        rodata = elffile.get_section_by_name(".bss")
 
         start = text["sh_offset"]
         end = rodata["sh_offset"] + rodata["sh_size"]

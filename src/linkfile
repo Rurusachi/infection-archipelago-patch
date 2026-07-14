@@ -3,19 +3,32 @@ cmndTarget = 0x00378c64;
 cmndTargetPrev = 0x00378c68;
 ccCheckTarget = 0x00519920;
 DispButton = 0x001b9ca0;
-MakePacket = 0x0015ae80;
 ccGetEnemyParam = 0x00570cf0;
 ccGetBossParam = 0x00571260;
+ccMenuCtrl___dt = 0x0051cc00;
 
 font = 0x00378954;
 ccSpriteColorTable = 0x002fb430;
 ccFont_SetType = 0x0015cc20;
 ccFont_MakeNum = 0x0015cd40;
 ccSprite_MakePacketStr = 0x0015aed0;
+ccSprite_MakePacket = 0x0015ae80;
+ccSprite_SendPacket = 0x0015abb0;
+ccSprite___ct = 0x0015a860;
+
+strcat = 0x00134140;
+ccKanjiStrcat = 0x0015eed0;
+ccInitKanji = 0x0015ee40;
+
+ccKanji___dt = 0x0015d300;
+ccKanji_Init = 0x0015d0f0;
+ccKanji_Extract = 0x0015d490;
+ccKanji_SetClm = 0x0015edb0;
+ccKanji_Disp = 0x0015e380;
 
 skillTbl = 0x0061f4a0;
 
-archipelagoData = 0x006FA5B0;
+archipelagoData = 0x006FA660;
 
 
 PHDRS {
