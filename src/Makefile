@@ -1,6 +1,6 @@
 PATCH_BIN = build/infection.patch
 EE_BIN = infection.elf
-EE_OBJS = infection.o
+EE_OBJS = infection.o hooks.o colors.o
 EE_LINKFILE := linkfile
 
 all: $(PATCH_BIN) 
@@ -16,7 +16,7 @@ include $(PS2SDK)/samples/Makefile.pref
 EE_INCS := -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include -I. $(EE_INCS)
 
 # Optimization compiler flags
-EE_OPTFLAGS ?= -O2
+EE_OPTFLAGS ?= -O2 -fno-zero-initialized-in-bss
 
 # Warning compiler flags
 EE_WARNFLAGS ?= -Wall

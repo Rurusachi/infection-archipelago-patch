@@ -5,6 +5,7 @@ ccCheckTarget = 0x00519920;
 DispButton = 0x001b9ca0;
 ccGetEnemyParam = 0x00570cf0;
 ccGetBossParam = 0x00571260;
+ccMenuCtrl___ct = 0x0051c140;
 ccMenuCtrl___dt = 0x0051cc00;
 
 font = 0x00378954;
@@ -40,8 +41,8 @@ SECTIONS {
 		*(.text.entry)
 		*(.text)
 		QUAD(0)
-		*(.data.*)
-		*(.rodata.*)
+		*(.data*)
+		*(.rodata*)
 	} :text
 
 	

@@ -1,0 +1,41 @@
+// Names from www.color-name.com
+#define PRESET_MOON_GRAY 0
+#define PRESET_TANGY_BLUE 1
+#define PRESET_BRILLIANT_RED 2
+#define PRESET_FLUORESCENT_MAGENTA 3
+#define PRESET_LASER_GREEN 4
+#define PRESET_AQUA 5
+#define PRESET_DIGITAL_YELLOW 6
+#define PRESET_WHITE 7
+#define PRESET_DARK_GREY 8
+#define PRESET_INTERNATIONAL_KLEIN_BLUE 9
+#define PRESET_PERFECT_RED 10
+#define PRESET_SHOCKING_PURPLE 11
+#define PRESET_PURE_GREEN 12
+#define PRESET_DEEP_AQUA 13
+#define PRESET_RIO_GRANDE 14
+#define PRESET_BLACK 15
+#define PRESET_ARGENT 16
+#define PRESET_ADONIS 17
+#define PRESET_COCKTAIL_RED 18
+#define PRESET_PURE_PINK 19
+#define PRESET_PALE_GREEN 20
+#define PRESET_ICE_BLUE 21
+#define PRESET_DOLLY 22
+#define PRESET_BLAZE_ORANGE 23
+
+// Archipelago colors
+#define CUSTOM_RED 0
+#define CUSTOM_GREEN 1
+#define CUSTOM_YELLOW 2
+#define CUSTOM_BLUE 3
+#define CUSTOM_MAGENTA 4
+#define CUSTOM_CYAN 5
+#define CUSTOM_SLATEBLUE 6
+#define CUSTOM_PLUM 7
+#define CUSTOM_SALMON 8
+#define CUSTOM_ORANGE 9
+
+void ccKanji_Disp_ColorCodes_White();
+void h_ccKanji_Disp_ColorCodes();
+void hook_ccKanji_Disp_ColorCodes();

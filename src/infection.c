@@ -1,7 +1,6 @@
 #include "infection.h"
-
-#define MessageNum 4
-#define KanjiNum 4
+#include "hooks.h"
+#include "colors.h"
 
 const float pos_x = 20.0; // 20.0
 const float pos_y = 20.0; // 20.0 + 20 * i
@@ -21,9 +20,9 @@ const uint custom_colors[] = {
     0x003c80, // orange
 };
 
-ccKanji* kanjiList[KanjiNum];
+ccKanji* kanjiList[KanjiNum] = {};
 
-// Helper functions
+// ccSprite helper functions
 inline void ccSprite_SetPos(ccSprite *this, int x, int y) {
     this->pos_x = x;
     this->pos_y = y;
@@ -42,68 +41,7 @@ inline void ccSprite_SetColorFromPreset(ccSprite *this, int colorIndex) {
     ccSprite_SetColor(this, ccSpriteColorTable[colorIndex]);
 }
 
-
-void orig_ccMenuCtrl___dt(ccMenuCtrl *menuCtrl, int param_1) {
-    asm volatile("addiu $sp, $sp, -0x40\n"
-                 "sd $ra, 0x30($sp)\n"
-                 "j 0x0051cc08\n"
-                 "nop");
-}
-
-void h_ccMenuCtrl___dt(ccMenuCtrl *menuCtrl, int param_1) {
-    for (int i = 0; i < KanjiNum; i++) {
-        ccKanji___dt(kanjiList[i], 1);
-    }
-    
-    orig_ccMenuCtrl___dt(menuCtrl, param_1);
-}
-
-#define COLOR_CODE(preset_color) COLOR_CODE_(preset_color)
-
-#define COLOR_CODE_(preset_color) \
-    asm volatile("lui       $at, 0x30\n"  \
-                 "ld         $a1, -0x4BD0 + 8*" #preset_color "($at)\n" \
-                 "andi       $a0, $a1, 0xff\n" \
-                 "andi       $v1, $a1, 0xff00\n" \
-                 "dsll       $v1, $v1, 0x18\n" \
-                 "or         $v1, $a0, $v1\n" \
-                 "sd         $v1, 0x68($s1)\n" \
-                 "ld         $a0, 0x70($s1)\n" \
-                 "li         $v1, -0x1\n" \
-                 "dsll32     $v1, $v1, 0x0\n" \
-                 "and        $a0, $a0, $v1\n" \
-                 "lui        $v1, 0xff\n" \
-                 "and        $v1, $a1, $v1\n" \
-                 "dsrl       $v1, $v1, 0x10\n" \
-                 "or         $v1, $a0, $v1\n" \
-                 "sd         $v1, 0x70($s1)\n" \
-                 "j          0x0015ed38\n");
-
-#define COLOR_CASE(case, function) \
-                 "li $v1, " #case "\n" \
-                 "beq $a0, $v1, (" #function ")\n"
-
-
-void ccKanji_Disp_ColorCodes_White() {
-    COLOR_CODE(PRESET_WHITE)
-}
-
-void h_ccKanji_Disp_ColorCodes() {
-    asm volatile(COLOR_CASE(0x56, ccKanji_Disp_ColorCodes_White) // 0x56 = "V" ("W" is already taken)
-                 "j 0x0015ed38\n");
-}
-
-void hook_ccKanji_Disp_ColorCodes() {
-    asm volatile("j (h_ccKanji_Disp_ColorCodes)\n");
-}
-
-void hook_ccMenuCtrl___dt() {
-    asm volatile("j (h_ccMenuCtrl___dt)\n"
-                 "nop");
-}
-
 int entry(ccMenuCtrl* menuCtrl) {
-
     if (archipelagoData.messages[0].status == (char)0x83) {
         // Initialize
         for (int i = 0; i < MessageNum; i++) {
@@ -115,8 +53,10 @@ int entry(ccMenuCtrl* menuCtrl) {
         
         // Kanji
         for (int i = 0; i < KanjiNum; i++) {
-            kanjiList[i] = ccInitKanji(0xC, 2);
-            kanjiList[i]->sprite.layer = menuCtrl->layer;
+            if (kanjiList[i] == 0) {
+                kanjiList[i] = ccInitKanji(0xC, 2);
+                kanjiList[i]->sprite.layer = menuCtrl->layer;
+            }
         }
 
         // Setup destructor hook
@@ -125,9 +65,16 @@ int entry(ccMenuCtrl* menuCtrl) {
         for (int i = 0; i < 8; i++) {
             dst[i] = src[i];
         }
+
+        // Setup constructor hook
+        dst = (byte*)ccMenuCtrl___ct;
+        src = (byte*)hook_ccMenuCtrl___ct;
+        for (int i = 0; i < 8; i++) {
+            dst[i] = src[i];
+        }
         
         // Setup colorcode hook
-        *(int*)0x0015ec00 = *(int*)hook_ccKanji_Disp_ColorCodes;
+        *(int*)0x0015ec00 = *(int*)hook_ccKanji_Disp_ColorCodes; // Mid-function hook
     }
 
     for (int i = 0; i < MessageNum; i++) {
